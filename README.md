@@ -53,7 +53,7 @@ unconVamDataCovs = lme(fixed = dep ~ time*size+female, random =~ time | schoolID
 summary(unconVamDataCovs)
 
 # New model that allows for the within group error terms (hetero) to be different controling for hetero
-hetVarVam = update(auto1Vam, weights = varIdent(form = ~ 1 | time))
+#hetVarVam = update(auto1Vam, weights = varIdent(form = ~ 1 | time))
 
 # hetVar doesn't work, but you would want to test if you want to test if hetero model is better than the homo model. 
 anova(unconVamData, hetVar)
