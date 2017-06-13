@@ -43,7 +43,7 @@ summary(level12)
 # Visually analyze each level (here just childID) to see if you need random slopes and random intercepts.  Remember that random intercepts means starting at different points and different slopes meaning moving in different directions. 
 plot(intervals(level12))
 summary(level12)
-# Now we are fitting an unconditoinal model meaning that both the intercept and slope are free to vary or that we are estimating each of them separatetly for each person.  Can use model = "ML" for full MLE with missing data
+# Now we are fitting an unconditoinal model meaning that both the intercept and slope are free to vary or that we are estimating each of them separatetly for each person.  Can use model = "ML" for full MLE with missing data.  Because we are including the childid so the data do not assume that students scores are the same and uncorrelated within students
 
 unconVamData = lme(dep ~ time, random =~ time | schoolID/childID, data = vamDataInd, method = "ML")
 summary(unconVamData)
@@ -52,17 +52,13 @@ summary(unconVamData)
 unconVamDataCovs = lme(fixed = dep ~ time*size+female, random =~ time | schoolID/childID, data = vamDataInd)
 summary(unconVamDataCovs)
 
-# New model that allows for the within group error terms (hetero) to be different controling for hetero
-#hetVarVam = update(auto1Vam, weights = varIdent(form = ~ 1 | time))
+library(lme4)
+str(InstEval)
+fmCross = lmer(y~ 1 + (1|s) + (1|d), InstEval, REML = 0)
 
-# hetVar doesn't work, but you would want to test if you want to test if hetero model is better than the homo model. 
-anova(unconVamData, hetVar)
 
-# New model has the old model with hetero, but now includes the autocorrelation among year
-auto1Vam = update(unconVamData, correlation=corCAR1(form = ~ time | schoolID/childID))
 
-anova(unconVamData, auto1Vam)
-
+# Crossed random effects take the form (1 | r1) + (1 | r2) ... while nested random effects take the form (1 | r1 / r2).
 ```
 
 
